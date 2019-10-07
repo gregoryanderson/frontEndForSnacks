@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { getRequest } from "./fetchCalls";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "./App.css";
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      snacks: [],
+      err: ""
+    };
+  }
+
+  fetchData = async () => {
+    getRequest()
+      .then(data => this.setState({ snacks: data }))
+      .catch(error => this.setState({ err: error }));
+  };
+
+  displaySnacks = () => {
+    const snacks = this.state.snacks.map(snack => {
+      console.log(snack.name)
+      return (
+          <p>{snack.name}</p>
+      );
+    });
+    return snacks
+  };
+
+  render() {
+    console.log(this.state.snacks);
+    return (
+      <div className="App">
+        <h1>Snacks</h1>
+        <button onClick={this.fetchData}>Get some snacks</button>
+        <button onClick={this.displaySnacks}>Display them</button>
+      </div>
+    );
+  }
 }
 
 export default App;
